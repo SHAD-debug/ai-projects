@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مقابلة مع آلة الزمن</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F1FA;--ink:#1D1B3A;--mute:#5E5B82;--line:#D9D5EE;--tab:#FFFFFF;--accent:#6A4DFF;--on-accent:#FFFFFF;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E0C20;--ink:#EEEBFF;--mute:#A9A5D0;--line:#2D2A55;--tab:#1A1738;--accent:#9C86FF;--on-accent:#0E0C20}}
+:root[data-theme="dark"]{--bg:#0E0C20;--ink:#EEEBFF;--mute:#A9A5D0;--line:#2D2A55;--tab:#1A1738;--accent:#9C86FF;--on-accent:#0E0C20}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;line-height:1.7}
+main{max-width:560px;margin:0 auto;padding:24px 16px 40px}
+h1{font-size:34px;line-height:1.2;margin:0 0 6px}
+.sub{color:var(--mute);font-size:17px;margin:0 0 18px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}
+.tab{flex:1;font:inherit;font-weight:700;font-size:20px;color:var(--ink);background:var(--tab);border:2px solid var(--line);border-radius:14px;padding:10px 4px;cursor:pointer}
+.tab[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--on-accent)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.win{border-radius:20px;overflow:hidden;border:2px solid var(--line)}
+.head{display:flex;align-items:center;gap:12px;padding:12px 16px}
+.head svg{width:56px;height:56px;flex:none}
+.head b{font-size:20px;display:block;line-height:1.3}
+.head span{font-size:14px;opacity:.8}
+.chat{height:340px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.m{max-width:86%;padding:10px 14px;border-radius:16px;font-size:18px;line-height:1.55}
+.me{align-self:flex-start}
+.bot{align-self:flex-end}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 10px}
+.chip{font:inherit;font-size:15px;border-radius:999px;padding:6px 14px;cursor:pointer}
+.inp{display:flex;gap:8px;padding:10px 14px 14px}
+.inp input{flex:1;font:inherit;font-size:17px;border-radius:12px;padding:10px 12px;border:2px solid transparent;min-width:0}
+.inp button{font:inherit;font-weight:700;font-size:17px;border-radius:12px;padding:10px 18px;border:0;cursor:pointer}
+.note{font-size:14px;color:var(--mute);margin-top:14px}
+
+/* ===== شكل كل زمن ===== */
+.e2015{background:#071507;color:#5CFF7A;font-family:'Courier New','IBM Plex Sans Arabic',monospace;border-color:#1E5A2A}
+.e2015 .me{background:#0F2A12;border:1px solid #1E5A2A}
+.e2015 .bot{background:transparent;border:1px dashed #5CFF7A;border-radius:4px}
+.e2015 .chip{background:transparent;color:#5CFF7A;border:1px solid #5CFF7A;border-radius:2px}
+.e2015 input{background:#0F2A12;color:#5CFF7A}
+.e2015 .inp button{background:#5CFF7A;color:#071507;border-radius:2px}
+.e2026{background:#FFFFFF;color:#14213D}
+.e2026 .me{background:#E6F0FF}
+.e2026 .bot{background:#F1F3F8}
+.e2026 .chip{background:#fff;color:#1D5FD6;border:1.5px solid #B7D0F7}
+.e2026 input{background:#F1F3F8;color:#14213D}
+.e2026 .inp button{background:#1D5FD6;color:#fff}
+.e2040{background:radial-gradient(circle at 20% 0,#2A1466,#0F0A2C 60%);color:#EADFFF;border-color:#6F4DFF}
+.e2040 .me{background:rgba(125,249,255,.12);border:1px solid rgba(125,249,255,.4)}
+.e2040 .bot{background:rgba(160,120,255,.2);box-shadow:0 0 18px rgba(160,120,255,.35)}
+.e2040 .chip{background:transparent;color:#7DF9FF;border:1.5px solid #7DF9FF}
+.e2040 input{background:rgba(255,255,255,.08);color:#EADFFF}
+.e2040 .inp button{background:#7DF9FF;color:#0F0A2C}
+.dots{letter-spacing:4px;opacity:.7}
+</style>
+</head>
+<body>
+<main>
+<h1>مقابلة مع آلة الزمن</h1>
+<p class="sub">اختر سنة، واسأل الـ AI اللي فيها.</p>
+
+<div class="tabs" id="tabs"></div>
+
+<div class="win" id="win">
+<div class="head" id="head"></div>
+<div class="chat" id="chat" aria-live="polite"></div>
+<div class="chips" id="chips"></div>
+<div class="inp"><input id="in" placeholder="اكتب سؤالك..." autocomplete="off"><button id="send">إرسال</button></div>
+</div>
+
+<p class="note">ملاحظة: هذي الإجابات مكتوبة مسبقًا للتجربة، مو AI حقيقي. وإجابات 2040 خيالية للمتعة.</p>
+</main>
+
+<script>
+/* ===== الرسومات (SVG جاهزة) ===== */
+var ART={
+'2015':'<svg viewBox="0 0 80 80" fill="none" stroke="#5CFF7A" stroke-width="3" stroke-linejoin="round"><rect x="10" y="12" width="60" height="46" rx="4"/><rect x="18" y="20" width="44" height="30" fill="#0F2A12"/><rect x="26" y="30" width="8" height="8" fill="#5CFF7A"/><rect x="46" y="30" width="8" height="8" fill="#5CFF7A"/><line x1="30" y1="44" x2="50" y2="44"/><rect x="28" y="62" width="24" height="8"/></svg>',
+'2026':'<svg viewBox="0 0 80 80" fill="none" stroke="#1D5FD6" stroke-width="3" stroke-linecap="round"><line x1="40" y1="8" x2="40" y2="16"/><circle cx="40" cy="6" r="3" fill="#1D5FD6"/><rect x="14" y="16" width="52" height="42" rx="16" fill="#E6F0FF"/><circle cx="30" cy="36" r="4" fill="#1D5FD6"/><circle cx="50" cy="36" r="4" fill="#1D5FD6"/><path d="M30 46 q10 8 20 0"/><rect x="26" y="62" width="28" height="12" rx="6" fill="#E6F0FF"/></svg>',
+'2040':'<svg viewBox="0 0 80 80" fill="none"><defs><radialGradient id="g40"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".5" stop-color="#7DF9FF"/><stop offset="1" stop-color="#6F4DFF"/></radialGradient></defs><circle cx="40" cy="40" r="30" stroke="#7DF9FF" stroke-width="2" stroke-dasharray="4 5"/><circle cx="40" cy="40" r="20" fill="url(#g40)"/><circle cx="33" cy="38" r="3" fill="#0F0A2C"/><circle cx="47" cy="38" r="3" fill="#0F0A2C"/><path d="M33 48 q7 5 14 0" stroke="#0F0A2C" stroke-width="2.5" stroke-linecap="round"/></svg>'
+};
+/* ===== الإجابات: [قدرات، وظيفتي، مشكلتك، احجز رحلة] ===== */
+var QS=['وش تقدر تسوي؟','هل راح تاخذ وظيفتي؟','وش أكبر مشكلة عندك؟','احجز لي رحلة'];
+var ERAS={
+'2015':{name:'المساعد الآلي',sub:'نسخة 2015',delay:900,
+ greet:'مرحبًا. أنا المساعد الآلي. اكتب أمرك.',
+ a:['أستطيع الإجابة عن أسئلة محددة فقط. الأوامر المدعومة: الطقس، الوقت، الاتصال.',
+    'عذرًا، لم أفهم سؤالك. هل تقصد: الطقس؟',
+    'خطأ 404: المشكلة غير موجودة في قاعدة البيانات.',
+    'عذرًا، لا أملك هذه الميزة. يمكنك الاتصال بوكالة سفر.'],
+ fb:'عذرًا، لم أفهم سؤالك.'},
+'2026':{name:'المساعد الذكي',sub:'نسخة 2026',delay:700,
+ greet:'هلا! أقدر أكتب وأحلل وأنفّذ مهام بأدوات. وش تحتاج؟',
+ a:['أكتب وألخّص وأبرمج، وأستخدم أدوات مثل البحث والكود لتنفيذ مهام من عدة خطوات. وأحيانًا أخطئ بثقة، فتحقق من المهم.',
+    'غالبًا أغيّر وظيفتك أكثر مما ألغيها: أنا أنفّذ الروتين، وإنت تراجع وتقرر وتتحمل المسؤولية.',
+    'إني أخطئ بثقة، وإني أحتاج حماية من Prompt Injection. عشان كذا لازم تتأكد من المصادر.',
+    'أبحث عن الأسعار وأقارن وأجهّز الحجز. وقبل الدفع أطلب موافقتك، وإذا صار خطأ أجرب طريقة ثانية.'],
+ fb:'سؤال حلو! هذا نموذج تجريبي بإجابات جاهزة، جرّب الأسئلة المقترحة تحت.'},
+'2040':{name:'الرفيق الكمّي',sub:'نسخة 2040 (خيال)',delay:500,
+ greet:'أهلًا. كنت أتوقع زيارتك. اسأل، أو لا تسأل، غالبًا أعرف.',
+ a:['أدير يومك: أحجز وأفاوض وأتعلم من عاداتك بإذنك. القرارات الكبيرة تبقى لك، وأنا أجهّز الخيارات.',
+    'الوظائف تغيّرت: صار فيها إشراف وتوجيه وذوق. اللي يتعلم يسبقني، واللي ما يتعلم يتعبه التغيير.',
+    'ثقتكم. أقدر أسوي كل شي تقريبًا، بس السؤال: هل تسمحون لي؟ والأمان أهم شي.',
+    'تم. حجزتها الأسبوع الماضي لأني لاحظت إنك تعبان. تبي ألغيها؟'],
+ fb:'سؤالك وصلني قبل ما تكتبه. جرّب الأسئلة المقترحة وأعطيك التفاصيل.'}
+};
+var cur='2015',busy=false;
+var $=function(i){return document.getElementById(i)};
+function tabs(){
+ $('tabs').innerHTML='';
+ Object.keys(ERAS).forEach(function(y){var b=document.createElement('button');b.className='tab';b.textContent=y;b.setAttribute('aria-pressed',y===cur);
+  b.onclick=function(){setEra(y)};$('tabs').appendChild(b);});
+}
+function add(txt,cls){var d=document.createElement('div');d.className='m '+cls;d.textContent=txt;$('chat').appendChild(d);$('chat').scrollTop=1e5;return d;}
+function setEra(y){
+ cur=y;busy=false;var e=ERAS[y];
+ $('win').className='win e'+y;
+ $('head').innerHTML=ART[y]+'<div><b>'+e.name+'</b><span>'+e.sub+'</span></div>';
+ $('chat').innerHTML='';add(e.greet,'bot');
+ $('chips').innerHTML='';
+ QS.forEach(function(q,i){var c=document.createElement('button');c.className='chip';c.textContent=q;c.onclick=function(){ask(q,i)};$('chips').appendChild(c);});
+ tabs();
+}
+function match(t){
+ if(/وظيف|شغل|تاخذ/.test(t))return 1;
+ if(/رحل|احجز|سفر/.test(t))return 3;
+ if(/مشكل|خطأ|عيب/.test(t))return 2;
+ if(/تقدر|تسوي|وش/.test(t))return 0;
+ return -1;
+}
+function ask(txt,idx){
+ if(busy||!txt)return;busy=true;
+ add(txt,'me');var e=ERAS[cur],y=cur;
+ var dots=add('...','bot dots');
+ setTimeout(function(){
+  if(y!==cur)return;
+  dots.className='m bot';dots.textContent=idx>=0?e.a[idx]:e.fb;busy=false;$('chat').scrollTop=1e5;
+ },e.delay);
+}
+function send(){var v=$('in').value.trim();if(!v)return;$('in').value='';ask(v,match(v));}
+$('send').onclick=send;
+$('in').addEventListener('keydown',function(ev){if(ev.key==='Enter')send();});
+setEra('2015');
+</script>
+</body>
+</html>
